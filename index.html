@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>你像哪个历史人物</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --main:#4a6b52;
+  --bg:#f4efe4;
+  --paper:#fbf8f0;
+  --ink:#2f2a20;
+  --ink2:#6b5f4a;
+  --line:rgba(120,100,70,.22);
+  --gold:#8a7a5c;
+}
+html,body{background:var(--bg);color:var(--ink)}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  min-height:100vh;line-height:1.7;
+  background-image:
+    repeating-linear-gradient(0deg,rgba(120,100,70,.035) 0 1px,transparent 1px 26px),
+    repeating-linear-gradient(90deg,rgba(120,100,70,.02) 0 1px,transparent 1px 26px);
+}
+.wrap{max-width:560px;margin:0 auto;padding:0 18px 80px}
+.hidden{display:none!important}
+
+/* ---------- 封面 ---------- */
+#stage-intro{padding-top:52px;text-align:center}
+.seal{
+  width:60px;height:60px;margin:0 auto 26px;border:2px solid var(--main);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--main);font-size:26px;font-family:"Songti SC",serif;font-weight:bold;
+  border-radius:4px;letter-spacing:0;
+}
+#stage-intro h1{
+  font-family:"Songti SC",serif;font-size:34px;font-weight:700;letter-spacing:4px;
+  line-height:1.5;margin-bottom:14px;
+}
+#stage-intro h1 em{font-style:normal;color:var(--main);display:block;font-size:40px;margin-top:2px}
+.sub{color:var(--ink2);font-size:14px;letter-spacing:1px;margin-bottom:34px}
+.meta{
+  display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:38px;
+}
+.meta span{
+  border:1px solid var(--line);padding:5px 13px;font-size:12px;color:var(--ink2);
+  border-radius:20px;background:rgba(255,255,255,.5);letter-spacing:.5px;
+}
+.btn{
+  display:block;width:100%;border:none;cursor:pointer;
+  background:var(--main);color:#fff;font-size:17px;letter-spacing:3px;
+  padding:16px;border-radius:6px;font-family:inherit;
+  box-shadow:0 2px 0 rgba(0,0,0,.08);
+}
+.btn:active{transform:translateY(1px);box-shadow:none}
+.btn-ghost{
+  background:transparent;color:var(--ink2);border:1px solid var(--line);
+  box-shadow:none;font-size:14px;letter-spacing:2px;padding:12px;
+}
+.intro-note{
+  margin-top:30px;padding:18px 16px;background:rgba(255,255,255,.55);
+  border:1px solid var(--line);border-radius:6px;
+  font-size:12.5px;color:var(--ink2);text-align:left;line-height:1.85;
+}
+.intro-note b{color:var(--ink);font-weight:600}
+
+/* ---------- 答题 ---------- */
+#stage-quiz{padding-top:26px}
+.q-head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.q-back{
+  border:1px solid var(--line);background:rgba(255,255,255,.6);color:var(--ink2);
+  width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1;
+  flex:0 0 auto;
+}
+.q-prog{flex:1}
+.q-prog-track{height:3px;background:rgba(120,100,70,.16);border-radius:2px;overflow:hidden}
+.q-prog-fill{height:100%;background:var(--main);transition:width .3s}
+.q-prog-text{font-size:12px;color:var(--gold);text-align:right;margin-top:6px;letter-spacing:1px}
+#q-title{
+  font-family:"Songti SC",serif;font-size:22px;font-weight:600;line-height:1.6;
+  margin:26px 0 24px;
+}
+#q-options{display:flex;flex-direction:column;gap:11px}
+.opt{
+  display:flex;align-items:flex-start;gap:12px;text-align:left;width:100%;
+  background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:6px;
+  padding:15px 15px;cursor:pointer;font-family:inherit;font-size:15px;color:var(--ink);
+  transition:.15s;line-height:1.6;
+}
+.opt:active{background:rgba(255,255,255,.95)}
+.opt.picked{border-color:var(--main);background:rgba(255,255,255,.95);opacity:.75}
+.opt-mark{
+  flex:0 0 24px;height:24px;border-radius:50%;border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--ink2);margin-top:1px;
+}
+.opt.picked .opt-mark{background:var(--main);color:#fff;border-color:var(--main)}
+.opt-text{flex:1}
+.q-foot{
+  margin-top:34px;padding:17px 16px;border-top:1px solid var(--line);
+  text-align:center;
+}
+.q-foot p{font-size:12.5px;color:var(--ink2);line-height:1.9}
+.q-foot .q-foot-2{font-size:11.5px;color:var(--gold);margin-top:3px}
+
+/* ---------- 结果 ---------- */
+#stage-result{padding-top:26px}
+.r-head{text-align:center;padding:32px 20px 26px;border:1px solid var(--line);border-radius:8px;
+  background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,.35))}
+.r-alias{font-size:12px;color:var(--gold);letter-spacing:3px;margin-bottom:10px}
+.r-name{
+  font-family:"Songti SC",serif;font-size:44px;font-weight:700;letter-spacing:8px;
+  color:var(--main);line-height:1.25;margin-bottom:8px;
+}
+.r-tag{font-size:13.5px;color:var(--ink2);letter-spacing:2px;margin-bottom:18px}
+.r-pct-wrap{display:flex;align-items:baseline;justify-content:center;gap:8px}
+.r-pct-num{font-family:sans-serif;font-size:52px;font-weight:700;color:var(--main);line-height:1}
+.r-pct-lab{font-size:13px;color:var(--gold);letter-spacing:2px}
+.r-intro{
+  font-size:15px;line-height:1.95;color:var(--ink);text-align:left;
+  margin:22px 0 4px;padding:18px 17px;background:rgba(255,255,255,.6);
+  border-left:3px solid var(--main);border-radius:0 6px 6px 0;
+}
+.blend{
+  margin:16px 0;padding:15px 16px;border:1px dashed var(--main);border-radius:6px;
+  background:rgba(255,255,255,.55);font-size:14px;line-height:1.85;
+}
+.blend-tag{font-size:12px;color:var(--main);letter-spacing:1px;margin-bottom:7px;font-weight:600}
+
+.sec{margin-top:34px}
+.sec-t{
+  font-family:"Songti SC",serif;font-size:18px;font-weight:700;letter-spacing:2px;
+  padding-bottom:11px;margin-bottom:19px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:9px;
+}
+.sec-t::before{content:"";width:3px;height:17px;background:var(--main);border-radius:2px;flex:0 0 auto}
+
+.bars{display:flex;flex-direction:column;gap:17px}
+.bar-top{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:var(--ink2);margin-bottom:8px}
+.bar-name{font-weight:600;color:var(--ink);letter-spacing:1px}
+.bar-val{color:var(--gold);font-variant-numeric:tabular-nums}
+.bar-track{position:relative;height:22px;background:rgba(120,100,70,.07);border-radius:4px;overflow:hidden}
+.bar-mine{position:absolute;left:0;top:0;height:11px;background:var(--main);border-radius:3px;opacity:.92}
+.bar-theirs{position:absolute;left:0;top:11px;height:11px;background:var(--gold);border-radius:3px;opacity:.5}
+.bar-legend{display:flex;gap:16px;font-size:11.5px;color:var(--gold);margin-top:2px;padding-left:1px}
+.bar-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+.hook{margin-bottom:19px;padding-bottom:19px;border-bottom:1px dashed var(--line)}
+.hook:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.hook-h{font-size:15px;font-weight:600;color:var(--main);margin-bottom:7px;letter-spacing:.5px}
+.hook-t{font-size:14px;line-height:1.9;color:var(--ink)}
+.hook-s{font-size:12px;color:var(--gold);margin-top:7px}
+
+#r-diffs{list-style:none}
+#r-diffs li{
+  font-size:14px;line-height:1.9;padding:12px 0 12px 20px;position:relative;
+  border-bottom:1px dashed var(--line);
+}
+#r-diffs li:last-child{border-bottom:none}
+#r-diffs li::before{
+  content:"";position:absolute;left:4px;top:22px;width:5px;height:5px;
+  border-radius:50%;background:var(--gold);
+}
+
+.adv{display:flex;gap:12px;align-items:flex-start;margin-bottom:13px}
+.adv-n{
+  flex:0 0 22px;height:22px;border-radius:50%;background:var(--main);color:#fff;
+  font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:2px;
+}
+.adv-t{font-size:14px;line-height:1.85;flex:1}
+
+.quote{
+  margin-top:30px;padding:24px 20px;background:rgba(255,255,255,.6);
+  border:1px solid var(--line);border-radius:8px;text-align:center;
+}
+#r-quote-t{font-family:"Songti SC",serif;font-size:18px;line-height:1.9;color:var(--main)}
+#r-quote-s{font-size:12px;color:var(--gold);margin-top:11px}
+
+.cands{margin-top:6px}
+.cand{display:flex;align-items:center;gap:11px;margin-bottom:10px;font-size:13px}
+.cand-n{flex:0 0 62px;color:var(--ink2);font-size:13px}
+.cand-top .cand-n{color:var(--ink);font-weight:600}
+.cand-track{flex:1;height:6px;background:rgba(120,100,70,.13);border-radius:3px;overflow:hidden}
+.cand-fill{height:100%;border-radius:3px;opacity:.75}
+.cand-p{flex:0 0 38px;text-align:right;color:var(--gold);font-size:12px}
+.cand-top .cand-p{color:var(--ink);font-weight:600}
+
+.r-actions{margin-top:34px;display:flex;flex-direction:column;gap:11px}
+.r-disclaimer{
+  margin-top:28px;font-size:11.5px;color:#8d8270;line-height:1.85;
+  padding:14px 15px;background:rgba(255,255,255,.45);border-radius:6px;
+  border:1px solid var(--line);
+}
+.r-date{text-align:center;font-size:11.5px;color:#a3937a;margin-top:14px;letter-spacing:1px}
+
+#card-wrap{margin-top:16px;text-align:center}
+#card-img{max-width:100%;border:1px solid var(--line);border-radius:6px;box-shadow:0 3px 14px rgba(0,0,0,.08)}
+.card-tip{font-size:12px;color:var(--gold);margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ============ 封面 ============ -->
+<section id="stage-intro">
+  <div class="seal">测</div>
+  <h1>你像哪个<em>历史人物</em></h1>
+  <p class="sub">12 道题 · 2 分钟 · 测出你的古人原型</p>
+  <div class="meta">
+    <span>六位原型</span>
+    <span>相似度评分</span>
+    <span>史实出处标注</span>
+    <span>可生成分享卡</span>
+  </div>
+  <button class="btn" id="btn-start">开 始 测 试</button>
+  <div class="intro-note">
+    <b>关于这个测试</b><br>
+    题目围绕日常真实处境设计，没有"选A代表你是哪种人"这种套路。<br>
+    六位原型的人物事迹与性格判断，均取自正史与传世文献原文，并在结果页逐条标注出处；<br>
+    若涉及后世评价或传说，会明确写明，不与史实混同。<br>
+    结果仅供娱乐与自我参照，不构成任何心理学诊断或历史人物性格还原。
+  </div>
+</section>
+
+<!-- ============ 答题 ============ -->
+<section id="stage-quiz" class="hidden">
+  <div class="q-head">
+    <button class="q-back" id="btn-back" type="button">‹</button>
+    <div class="q-prog">
+      <div class="q-prog-track"><div class="q-prog-fill" id="q-progress-fill"></div></div>
+      <div class="q-prog-text" id="q-progress-text">1 / 12</div>
+    </div>
+  </div>
+  <h2 id="q-title"></h2>
+  <p id="q-body" style="font-size:12px;color:var(--gold);margin:-16px 0 18px;letter-spacing:1px"></p>
+  <div id="q-options"></div>
+  <div class="q-foot">
+    <p>没有标准答案，凭第一反应选就行。</p>
+    <p class="q-foot-2">测完会给出你的六维画像、相似度，以及与这位历史人物的对照解析。</p>
+  </div>
+</section>
+
+<!-- ============ 结果 ============ -->
+<section id="stage-result" class="hidden">
+  <div class="r-head">
+    <div class="r-alias" id="r-alias"></div>
+    <div class="r-name" id="r-name"></div>
+    <div class="r-tag" id="r-tag"></div>
+    <div class="r-pct-wrap">
+      <span class="r-pct-num" id="r-pct"></span>
+      <span class="r-pct-lab">相似度</span>
+    </div>
+  </div>
+
+  <p class="r-intro" id="r-intro"></p>
+
+  <div class="blend hidden" id="r-blend"></div>
+
+  <div class="sec">
+    <div class="sec-t">六维对照</div>
+    <div class="bars" id="r-bars"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">你们像在这里</div>
+    <div id="r-hooks"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">你和他不太一样的地方</div>
+    <ul id="r-diffs"></ul>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">给你的三句话</div>
+    <div id="r-advice"></div>
+  </div>
+
+  <div class="quote">
+    <div id="r-quote-t"></div>
+    <div id="r-quote-s"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">全部候选原型</div>
+    <div class="cands" id="r-cands"></div>
+  </div>
+
+  <div class="r-actions">
+    <button class="btn" id="btn-card" type="button">生成分享卡片</button>
+    <div id="card-wrap" class="hidden">
+      <img id="card-img" alt="分享卡">
+      <p class="card-tip">长按图片保存，或点下方按钮下载</p>
+      <button class="btn btn-ghost" id="btn-save" type="button">下载卡片</button>
+    </div>
+    <button class="btn btn-ghost" id="btn-copy" type="button">复制结果文案</button>
+    <button class="btn btn-ghost" id="btn-again" type="button">重新测一次</button>
+  </div>
+
+  <div class="r-disclaimer" id="r-disclaimer"></div>
+  <div class="r-date" id="r-date"></div>
+</section>
+
+</div>
+
+<canvas id="card-canvas" style="display:none"></canvas>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
